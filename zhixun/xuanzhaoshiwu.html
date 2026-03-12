@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link icon="favicon.ico" type="image/x-icon" href="zhiuxnlogo.png">
+    <title>智寻 - 寻找失物</title>
+    <style>
+        /* 寻找失物页面特定样式 */
+        .lost-items-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0e6ff;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #6A1B9A;
+            font-weight: 600;
+        }
+
+        .back-btn {
+            background-color: #f8f4ff;
+            border: 1px solid #f0e6ff;
+            border-radius: 8px;
+            padding: 8px 16px;
+            color: #6A1B9A;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(135deg, #6A1B9A, #8E24AA);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .search-section {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid #f0e6ff;
+            box-shadow: 0 4px 12px rgba(106, 27, 154, 0.05);
+        }
+
+        .search-form {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #f0e6ff;
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: #f8f4ff;
+            color: #1f1f1f;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #6A1B9A;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(106, 27, 154, 0.08);
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, #6A1B9A, #8E24AA);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background: linear-gradient(135deg, #50157a, #6A1B9A);
+            transform: translateY(-1px);
+        }
+
+        .filter-section {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background-color: #f8f4ff;
+            border: 1px solid #f0e6ff;
+            border-radius: 20px;
+            padding: 6px 12px;
+            color: #6A1B9A;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #6A1B9A, #8E24AA);
+            color: white;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .item-card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #f0e6ff;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(106, 27, 154, 0.05);
+        }
+
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(106, 27, 154, 0.1);
+        }
+
+        .item-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: #f8f4ff;
+        }
+
+        .item-content {
+            padding: 20px;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .item-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f1f1f;
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .item-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-circle {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid #e9e9ed;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .status-circle.claimed {
+            background: linear-gradient(135deg, #6A1B9A, #8E24AA);
+            border-color: #6A1B9A;
+        }
+
+        .status-text {
+            font-size: 12px;
+            color: #8e8e98;
+            font-weight: 500;
+        }
+
+        .status-text.claimed {
+            color: #6A1B9A;
+            font-weight: 600;
+        }
+
+        .item-details {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #5a5a6a;
+        }
+
+        .detail-item i {
+            color: #6A1B9A;
+            width: 16px;
+        }
+
+        .item-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #f0e6ff;
+        }
+
+        .item-time {
+            font-size: 12px;
+            color: #8e8e98;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            background-color: #f8f4ff;
+            border: 1px solid #f0e6ff;
+            border-radius: 6px;
+            padding: 6px 10px;
+            color: #6A1B9A;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background-color: #6A1B9A;
+            color: white;
+        }
+
+        .action-btn.claimed {
+            background-color: #e8f5e8;
+            border-color: #4caf50;
+            color: #4caf50;
+        }
+
+        .no-items {
+            text-align: center;
+            padding: 60px 20px;
+            color: #8e8e98;
+        }
+
+        .no-items i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #f0e6ff;
+        }
+
+        .no-items h3 {
+            margin: 0 0 10px 0;
+            color: #5a5a6a;
+        }
+
+        .no-items p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .admin-notice {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #856404;
+        }
+
+        .admin-notice h4 {
+            margin: 0 0 8px 0;
+            font-size: 16px;
+        }
+
+        .admin-notice p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .claimed-badge {
+            background: linear-gradient(135deg, #4caf50, #66bb6a);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .claim-btn {
+            background: linear-gradient(135deg, #6A1B9A, #8E24AA);
+            color: white;
+            border: none;
+        }
+
+        .claim-btn:hover {
+            background: linear-gradient(135deg, #50157a, #6A1B9A);
+        }
+
+        .claimed-status {
+            font-size: 12px;
+            color: #8e8e98;
+        }
+
+        /* 领取表单样式 */
+        .claim-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .claim-form {
+            background-color: white;
+            border-radius: 16px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .claim-form h3 {
+            margin: 0 0 20px 0;
+            color: #6A1B9A;
+            font-size: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #5a5a6a;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #f0e6ff;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #6A1B9A;
+            box-shadow: 0 0 0 3px rgba(106, 27, 154, 0.08);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel {
+            background-color: #f8f4ff;
+            border: 1px solid #f0e6ff;
+            color: #6A1B9A;
+        }
+
+        .btn-cancel:hover {
+            background-color: #f0e6ff;
+        }
+
+        .btn-confirm {
+            background: linear-gradient(135deg, #6A1B9A, #8E24AA);
+            border: none;
+            color: white;
+        }
+
+        .btn-confirm:hover {
+            background: linear-gradient(135deg, #50157a, #6A1B9A);
+        }
+
+        @media (max-width: 768px) {
+            .items-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .search-form {
+                flex-direction: column;
+            }
+            
+            .filter-section {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="lost-items-container">
+        <!-- 页面头部 -->
+        <div class="page-header">
+            <h1><i class="fas fa-search"></i> 寻找失物</h1>
+            <a href="main.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                返回主页
+            </a>
+        </div>
+
+        <!-- 搜索区域 -->
+        <div class="search-section">
+            <div class="search-form">
+                <input type="text" id="searchInput" class="search-input" placeholder="搜索失物名称、地点或描述...">
+                <button class="search-btn" onclick="searchItems()">
+                    <i class="fas fa-search"></i> 搜索
+                </button>
+            </div>
+            <div class="filter-section">
+                <button class="filter-btn" onclick="filterItems('all')">全部</button>
+                <button class="filter-btn" onclick="filterItems('unclaimed')">未领取</button>
+                <button class="filter-btn" onclick="filterItems('claimed')">已放置失物招领处</button>
+                <button class="filter-btn" onclick="filterItems('claimedByMe')">已被个人领取</button>
+            </div>
+        </div>
+
+        <!-- 管理员提示 -->
+        <div id="adminNotice" class="admin-notice" style="display: none;">
+            <h4><i class="fas fa-user-shield"></i> 管理员操作提示</h4>
+            <p>您可以点击状态圆圈标记物品为"已放置失物招领处"，或使用操作按钮进行管理。</p>
+        </div>
+
+        <!-- 失物列表 -->
+        <div id="itemsGrid" class="items-grid">
+            <!-- 失物卡片将通过JavaScript动态生成 -->
+        </div>
+
+        <!-- 空状态 -->
+        <div id="noItems" class="no-items" style="display: none;">
+            <i class="fas fa-search"></i>
+            <h3>暂无失物信息</h3>
+            <p>当前没有找到匹配的失物信息，请稍后再试或尝试其他搜索条件。</p>
+        </div>
+    </div>
+
+    <script>
+        let isAdmin = false;
+        let allItems = [];
+        let filteredItems = [];
+        let currentFilter = 'all';
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+            checkAdminStatus();
+            loadLostItems();
+            setupSearch();
+        });
+
+        // 检查登录状态
+        function checkLoginStatus() {
+            const currentUser = localStorage.getItem('current_user');
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+        }
+
+        // 检查管理员状态
+        function checkAdminStatus() {
+            // 这里可以根据用户信息判断是否为管理员
+            // 暂时使用简单的判断逻辑
+            const userData = JSON.parse(localStorage.getItem('current_user') || '{}');
+            const schoolInfo = JSON.parse(localStorage.getItem('school_info') || '{}');
+            
+            // 简单的管理员判断逻辑（实际项目中应该更严谨）
+            if (userData.nickname && userData.nickname.includes('管理员') || 
+                schoolInfo.studentId && schoolInfo.studentId.startsWith('admin')) {
+                isAdmin = true;
+                document.getElementById('adminNotice').style.display = 'block';
+            }
+        }
+
+        // 加载失物数据
+        function loadLostItems() {
+            // 从localStorage加载失物数据，如果没有则使用示例数据
+            const savedItems = localStorage.getItem('lost_items');
+            if (savedItems) {
+                allItems = JSON.parse(savedItems);
+            } else {
+                // 示例数据
+                allItems = [
+                    {
+                        id: 1,
+                        name: '黑色钱包',
+                        image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2Y4ZjRmZiIvPjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM2QTFCOUEiIHRleHQtYW5jaG9yPSJtaWRkbGUiPua3q+WPi+WKoOi9rDwvdGV4dD48L3N2Zz4=',
+                        location: '图书馆三楼自习区',
+                        foundTime: '2024-01-15T10:30:00',
+                        description: '黑色皮质钱包，内有身份证、银行卡若干',
+                        claimed: false,
+                        claimedBy: '',
+                        claimedTime: '',
+                        postedBy: '张老师',
+                        contact: '138****1234'
+                    },
+                    {
+                        id: 2,
+                        name: '苹果手机',
+                        image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2Y4ZjRmZiIvPjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM2QTFCOUEiIHRleHQtYW5jaG9yPSJtaWRkbGUiPuiKseiKseiKseWKoOi9rDwvdGV4dD48L3N2Zz4=',
+                        location: '教学楼B座走廊',
+                        foundTime: '2024-01-14T15:20:00',
+                        description: 'iPhone 13 Pro，黑色保护壳，屏幕有轻微划痕',
+                        claimed: true,
+                        claimedBy: '李管理员',
+                        claimedTime: '2024-01-14T16:00:00',
+                        postedBy: '王同学',
+                        contact: '微信联系'
+                    },
+                    {
+                        id: 3,
+                        name: '学生证',
+                        image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2Y4ZjRmZiIvPjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM2QTFCOUEiIHRleHQtYW5jaG9yPSJtaWRkbGUiPuiKseiKseiKseWKoOi9rDwvdGV4dD48L3N2Zz4=',
+                        location: '食堂一楼',
+                        foundTime: '2024-01-16T12:00:00',
+                        description: '张三同学的学生证，计算机学院',
+                        claimed: false,
+                        claimedBy: '',
+                        claimedTime: '',
+                        postedBy: '食堂工作人员',
+                        contact: '食堂服务台'
+                    },
+                    {
+                        id: 4,
+                        name: '笔记本电脑',
+                        image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2Y4ZjRmZiIvPjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM2QTFCOUEiIHRleHQtYW5jaG9yPSJtaWRkbGUiPuiKseiKseiKseWKoOi9rDwvdGV4dD48L3N2Zz4=',
+                        location: '实验楼机房',
+                        foundTime: '2024-01-13T18:30:00',
+                        description: '联想ThinkPad，黑色，配置较高',
+                        claimed: true,
+                        claimedBy: '赵管理员',
+                        claimedTime: '2024-01-14T09:00:00',
+                        postedBy: '实验室管理员',
+                        contact: '实验楼办公室'
+                    }
+                ];
+                localStorage.setItem('lost_items', JSON.stringify(allItems));
+            }
+            
+            filterItems(currentFilter);
+        }
+
+        // 设置搜索功能
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchItems();
+                }
+            });
+        }
+
+        // 搜索失物
+        function searchItems() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                filterItems(currentFilter);
+                return;
+            }
+
+            const userData = JSON.parse(localStorage.getItem('current_user') || '{}');
+            const currentUser = userData.nickname || '';
+            
+            if (currentFilter === 'claimedByMe') {
+                // 如果当前在"已被个人领取"分类，搜索所有个人领取的物品
+                filteredItems = allItems.filter(item => 
+                    (item.name.toLowerCase().includes(searchTerm) ||
+                     item.location.toLowerCase().includes(searchTerm) ||
+                     item.description.toLowerCase().includes(searchTerm)) &&
+                    item.claimed && item.claimedBy === currentUser && !item.claimedBy.includes('管理员')
+                );
+            } else {
+                // 其他情况下，只搜索未领取和管理员领取的物品
+                filteredItems = allItems.filter(item => 
+                    (item.name.toLowerCase().includes(searchTerm) ||
+                     item.location.toLowerCase().includes(searchTerm) ||
+                     item.description.toLowerCase().includes(searchTerm)) &&
+                    (!item.claimed || (item.claimed && item.claimedBy.includes('管理员')))
+                );
+            }
+            
+            displayItems(filteredItems);
+        }
+
+        // 筛选失物
+        function filterItems(filter) {
+            currentFilter = filter;
+            
+            // 更新筛选按钮状态
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            const userData = JSON.parse(localStorage.getItem('current_user') || '{}');
+            const currentUser = userData.nickname || '';
+            
+            switch (filter) {
+                case 'all':
+                    // 全部：只显示未领取和管理员领取的物品，不显示个人领取的物品
+                    filteredItems = allItems.filter(item => !item.claimed || (item.claimed && item.claimedBy.includes('管理员')));
+                    break;
+                case 'unclaimed':
+                    filteredItems = allItems.filter(item => !item.claimed);
+                    break;
+                case 'claimed':
+                    filteredItems = allItems.filter(item => item.claimed && item.claimedBy.includes('管理员'));
+                    break;
+                case 'claimedByMe':
+                    filteredItems = allItems.filter(item => item.claimed && item.claimedBy === currentUser && !item.claimedBy.includes('管理员'));
+                    break;
+                case 'recent':
+                    // 最近7天的物品：只显示未领取和管理员领取的物品，不显示个人领取的物品
+                    const oneWeekAgo = new Date();
+                    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                    filteredItems = allItems.filter(item => new Date(item.foundTime) > oneWeekAgo && (!item.claimed || (item.claimed && item.claimedBy.includes('管理员'))));
+                    break;
+                default:
+                    filteredItems = allItems.filter(item => !item.claimed || (item.claimed && item.claimedBy.includes('管理员')));
+            }
+            
+            displayItems(filteredItems);
+        }
+
+        // 显示失物列表
+        function displayItems(items) {
+            const itemsGrid = document.getElementById('itemsGrid');
+            const noItems = document.getElementById('noItems');
+            
+            if (items.length === 0) {
+                itemsGrid.style.display = 'none';
+                noItems.style.display = 'block';
+                return;
+            }
+            
+            itemsGrid.style.display = 'grid';
+            noItems.style.display = 'none';
+            
+            itemsGrid.innerHTML = '';
+            
+            items.forEach(item => {
+                const itemCard = createItemCard(item);
+                itemsGrid.appendChild(itemCard);
+            });
+        }
+
+        // 创建失物卡片
+        function createItemCard(item) {
+            const card = document.createElement('div');
+            card.className = 'item-card';
+            
+            const foundTime = new Date(item.foundTime);
+            const timeText = formatTime(foundTime);
+            
+            card.innerHTML = `
+                <img src="${item.image}" alt="${item.name}" class="item-image" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2Y4ZjRmZiIvPjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM2QTFCOUEiIHRleHQtYW5jaG9yPSJtaWRkbGUiPuWKoOi9reiKseiKseiKsTwvdGV4dD48L3N2Zz4='">
+                <div class="item-content">
+                    <div class="item-header">
+                        <h3 class="item-name">${item.name}</h3>
+                        <div class="item-status">
+                            <div class="status-circle ${item.claimed ? 'claimed' : ''}" 
+                                 onclick="toggleClaimStatus(${item.id})" 
+                                 title="${isAdmin ? '点击标记为已领取' : '状态指示'}"></div>
+                            <span class="status-text ${item.claimed ? 'claimed' : ''}">
+                                ${item.claimed ? (item.claimedBy.includes('管理员') ? '已放置失物招领处' : '已领取') : '管理员未领取'}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="item-details">
+                        <div class="detail-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>捡到地点：${item.location}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-clock"></i>
+                            <span>捡到时间：${timeText}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-info-circle"></i>
+                            <span>描述：${item.description}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-phone"></i>
+                            <span>联系方式：${item.contact}</span>
+                        </div>
+                        ${item.claimed ? `
+                            <div class="detail-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>领取人：${item.claimedBy}（${formatTime(new Date(item.claimedTime))}）</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="item-footer">
+                        ${!item.claimed ? `
+                            <button class="action-btn claim-btn" onclick="showClaimForm(${item.id})")>
+                                领取
+                            </button>
+                        ` : item.claimedBy.includes('管理员') ? `
+                            <span class="claimed-status">已放置失物招领处</span>
+                        ` : `
+                            <button class="action-btn claimed" disabled>
+                                已领取
+                            </button>
+                        `}
+                        ${isAdmin ? `
+                            <div class="admin-actions">
+                                <button class="action-btn ${item.claimed ? 'claimed' : ''}" 
+                                        onclick="${item.claimed ? 'unclaimItem' : 'claimItem'}(${item.id})">
+                                    ${item.claimed ? '取消领取' : '标记领取'}
+                                </button>
+                                <button class="action-btn" onclick="editItem(${item.id})">编辑</button>
+                                <button class="action-btn" onclick="deleteItem(${item.id})">删除</button>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // 切换领取状态（管理员功能）
+        function toggleClaimStatus(itemId) {
+            if (!isAdmin) return;
+            
+            const item = allItems.find(i => i.id === itemId);
+            if (item) {
+                if (item.claimed) {
+                    unclaimItem(itemId);
+                } else {
+                    claimItem(itemId);
+                }
+            }
+        }
+
+        // 标记为已领取（管理员功能）
+        function claimItem(itemId) {
+            if (!isAdmin) return;
+            
+            const userData = JSON.parse(localStorage.getItem('current_user') || '{}');
+            const item = allItems.find(i => i.id === itemId);
+            
+            if (item && !item.claimed) {
+                item.claimed = true;
+                item.claimedBy = userData.nickname || '管理员';
+                item.claimedTime = new Date().toISOString();
+                
+                localStorage.setItem('lost_items', JSON.stringify(allItems));
+                filterItems(currentFilter);
+                
+                showMessage(`"${item.name}" 已标记为已放置失物招领处`, 'success');
+            }
+        }
+
+        // 取消领取状态（管理员功能）
+        function unclaimItem(itemId) {
+            if (!isAdmin) return;
+            
+            const item = allItems.find(i => i.id === itemId);
+            
+            if (item && item.claimed) {
+                item.claimed = false;
+                item.claimedBy = '';
+                item.claimedTime = '';
+                
+                localStorage.setItem('lost_items', JSON.stringify(allItems));
+                filterItems(currentFilter);
+                
+                showMessage(`"${item.name}" 已取消领取状态`, 'info');
+            }
+        }
+
+        // 编辑物品（管理员功能）
+        function editItem(itemId) {
+            if (!isAdmin) return;
+            
+            showMessage('编辑功能开发中...', 'info');
+        }
+
+        // 删除物品（管理员功能）
+        function deleteItem(itemId) {
+            if (!isAdmin) return;
+            
+            if (confirm('确定要删除这个失物信息吗？此操作不可恢复。')) {
+                allItems = allItems.filter(item => item.id !== itemId);
+                localStorage.setItem('lost_items', JSON.stringify(allItems));
+                filterItems(currentFilter);
+                
+                showMessage('失物信息已删除', 'success');
+            }
+        }
+
+        // 格式化时间显示
+        function formatTime(date) {
+            const now = new Date();
+            const diff = now - date;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+            
+            if (minutes < 60) {
+                return `${minutes}分钟前`;
+            } else if (hours < 24) {
+                return `${hours}小时前`;
+            } else if (days < 7) {
+                return `${days}天前`;
+            } else {
+                return date.toLocaleDateString('zh-CN');
+            }
+        }
+
+        // 显示消息
+        function showMessage(message, type = 'info') {
+            // 移除现有的消息
+            const existingMsg = document.querySelector('.message-toast');
+            if (existingMsg) {
+                existingMsg.remove();
+            }
+
+            const toast = document.createElement('div');
+            toast.className = `message-toast message-${type}`;
+            
+            // 根据类型添加图标
+            const icon = getMessageIcon(type);
+            toast.innerHTML = `${icon}<span>${message}</span>`;
+            
+            document.body.appendChild(toast);
+            
+            // 3秒后自动消失
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.remove();
+                }
+            }, 3000);
+        }
+
+        // 获取消息图标
+        function getMessageIcon(type) {
+            const icons = {
+                success: '<i class="fas fa-check-circle"></i>',
+                error: '<i class="fas fa-exclamation-triangle"></i>',
+                warning: '<i class="fas fa-exclamation-circle"></i>',
+                info: '<i class="fas fa-info-circle"></i>'
+            };
+            return icons[type] || icons.info;
+        }
+
+        // 显示领取表单
+        function showClaimForm(itemId) {
+            // 创建模态框
+            const modal = document.createElement('div');
+            modal.className = 'claim-modal';
+            modal.innerHTML = `
+                <div class="claim-form">
+                    <h3><i class="fas fa-clipboard-check"></i> 领取失物</h3>
+                    <div class="form-group">
+                        <label for="claimName">姓名 <span style="color: red;">*</span></label>
+                        <input type="text" id="claimName" placeholder="请输入您的姓名">
+                    </div>
+                    <div class="form-group">
+                        <label for="claimPhone">电话 <span style="color: red;">*</span></label>
+                        <input type="tel" id="claimPhone" placeholder="请输入您的电话号码">
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-cancel" onclick="closeClaimForm()">取消</button>
+                        <button class="btn btn-confirm" onclick="submitClaimForm(${itemId})">确认</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        // 关闭领取表单
+        function closeClaimForm() {
+            const modal = document.querySelector('.claim-modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // 提交领取表单
+        function submitClaimForm(itemId) {
+            const name = document.getElementById('claimName').value.trim();
+            const phone = document.getElementById('claimPhone').value.trim();
+            
+            // 验证输入
+            if (!name) {
+                showMessage('请输入姓名', 'error');
+                return;
+            }
+            
+            if (!phone) {
+                showMessage('请输入电话', 'error');
+                return;
+            }
+            
+            // 标记物品为已领取
+            const item = allItems.find(i => i.id === itemId);
+            if (item && !item.claimed) {
+                item.claimed = true;
+                item.claimedBy = name;
+                item.claimedTime = new Date().toISOString();
+                item.claimPhone = phone;
+                
+                localStorage.setItem('lost_items', JSON.stringify(allItems));
+                filterItems(currentFilter);
+                
+                closeClaimForm();
+                showMessage(`"${item.name}" 已成功领取`, 'success');
+            }
+        }
+    </script>
+</body>
+</html>

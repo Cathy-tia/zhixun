@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link icon="favicon.ico" type="image/x-icon" href="zhiuxnlogo.png">
+<title>智寻 - 智能招领系统</title>
+
+<style>
+.feature-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+margin-top:30px;
+}
+
+.feature-card{
+background:#fff;
+border-radius:14px;
+padding:30px;
+text-align:center;
+border:1px solid #eee;
+cursor:pointer;
+transition:0.3s;
+}
+
+.feature-card:hover{
+transform:translateY(-5px);
+box-shadow:0 8px 20px rgba(0,0,0,0.08);
+}
+
+.feature-icon{
+font-size:32px;
+color:#6A1B9A;
+margin-bottom:10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="main-container">
+
+<!-- 头部 -->
+<div class="header">
+<div class="user-info">
+<img id="userAvatar" class="user-avatar" src="" alt="用户头像" onclick="goToProfile()" style="cursor:pointer;">
+<div class="user-details">
+<h2 id="userName">用户</h2>
+<p id="userPhone">手机号</p>
+<span id="loginType" class="login-type-badge"></span>
+</div>
+</div>
+
+<div>
+<a href="profile.html" class="profile-btn">
+<i class="fas fa-user-cog"></i> 个人信息
+</a>
+
+<button class="logout-btn" onclick="logout()">
+<i class="fas fa-sign-out-alt"></i> 退出登录
+</button>
+</div>
+</div>
+
+<!-- 欢迎 -->
+<div class="welcome-message">
+<h1>欢迎使用智寻智能招领系统</h1>
+<p>校园失物招领平台</p>
+</div>
+
+<!-- 功能区 -->
+<div class="feature-grid">
+
+<div class="feature-card" onclick="window.location.href='xuanzhaoshiwu.html'">
+<div class="feature-icon">
+<i class="fas fa-search"></i>
+</div>
+<h3>寻找失物</h3>
+<p>查看已经上传的失物信息</p>
+</div>
+
+<div class="feature-card" onclick="window.location.href='found.html'">
+<div class="feature-icon">
+<i class="fas fa-hand-holding-heart"></i>
+</div>
+<h3>拾到物品</h3>
+<p>登记拾到的物品信息</p>
+</div>
+
+</div>
+
+<!-- 最近活动 -->
+<div class="recent-activity">
+
+<h3>最近活动</h3>
+
+<div class="activity-item">
+<div class="activity-icon">
+<i class="fas fa-user-plus"></i>
+</div>
+
+<div class="activity-content">
+<h4>成功登录系统</h4>
+<p id="loginTime">刚刚</p>
+</div>
+</div>
+
+<div class="activity-item">
+<div class="activity-icon">
+<i class="fas fa-info-circle"></i>
+</div>
+
+<div class="activity-content">
+<h4>系统提示</h4>
+<p>欢迎使用智寻失物招领系统</p>
+</div>
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+document.addEventListener('DOMContentLoaded',function(){
+displayUserInfo();
+updateLoginTime();
+checkLoginStatus();
+})
+
+function displayUserInfo(){
+
+const userData=JSON.parse(localStorage.getItem('current_user')||'{}')
+const loginType=localStorage.getItem('login_type')||'unknown'
+const schoolInfo=JSON.parse(localStorage.getItem('school_info')||'{}')
+
+if(userData.avatar){
+document.getElementById('userAvatar').src=userData.avatar
+}
+
+document.getElementById('userName').textContent=userData.nickname||'用户'
+
+let text=''
+
+if(userData.phone){
+text=userData.phone.replace(/(\d{3})(\d{4})(\d{4})/,'$1****$3')
+}else{
+text='微信用户'
+}
+
+if(schoolInfo.schoolName){
+text+=' · '+schoolInfo.schoolName
+}
+
+document.getElementById('userPhone').textContent=text
+
+const loginTypeBadge=document.getElementById('loginType')
+
+if(loginType==='wechat'){
+loginTypeBadge.textContent='微信登录'
+loginTypeBadge.style.background='#07C160'
+}
+else if(loginType==='phone'){
+loginTypeBadge.textContent='手机登录'
+loginTypeBadge.style.background='#6A1B9A'
+}
+
+}
+
+function updateLoginTime(){
+
+const now=new Date()
+
+const timeString=now.toLocaleString('zh-CN',{
+year:'numeric',
+month:'2-digit',
+day:'2-digit',
+hour:'2-digit',
+minute:'2-digit'
+})
+
+document.getElementById('loginTime').textContent=timeString
+}
+
+function goToProfile(){
+window.location.href='profile.html'
+}
+
+function logout(){
+
+if(confirm('确定退出登录吗？')){
+
+localStorage.removeItem('current_user')
+localStorage.removeItem('login_type')
+
+window.location.href='login.html'
+
+}
+
+}
+
+function checkLoginStatus(){
+
+const currentUser=localStorage.getItem('current_user')
+
+if(!currentUser){
+window.location.href='login.html'
+}
+
+}
+
+</script>
+
+</body>
+</html>

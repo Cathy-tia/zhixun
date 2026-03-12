@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>智寻 - 个人信息管理</title>
+    <style>
+        /* 个人信息页面特定样式 */
+        .profile-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0e6ff;
+        }
+
+        .profile-header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #6A1B9A;
+            font-weight: 600;
+        }
+
+        .back-btn {
+            background-color: #f8f4ff;
+            border: 1px solid #f0e6ff;
+            border-radius: 8px;
+            padding: 8px 16px;
+            color: #6A1B9A;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(135deg, #6A1B9A, #8E24AA);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .profile-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+
+        .avatar-section {
+            text-align: center;
+        }
+
+        .avatar-upload {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .avatar-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #6A1B9A;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .avatar-preview:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(106, 27, 154, 0.2);
+        }
+
+        .avatar-upload-btn {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #6A1B9A, #8E24AA);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            border: 2px solid white;
+        }
+
+        .avatar-upload input {
+            display: none;
+        }
+
+        .avatar-hint {
+            font-size: 12px;
+            color: #8e8e98;
+            margin-top: 5px;
+        }
+
+        .info-section {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid #f0e6ff;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #6A1B9A;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #f0e6ff;
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: #f8f4ff;
+            color: #1f1f1f;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #6A1B9A;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(106, 27, 154, 0.08);
+        }
+
+        .form-input:disabled {
+            background-color: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #f0e6ff;
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: #f8f4ff;
+            color: #1f1f1f;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236A1B9A' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 12px;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #6A1B9A;
+            background-color: #ffffff;
+        }
+
+        .form-hint {
+            font-size: 12px;
+            color: #8e8e98;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        .section-title {
+            font-size: 18px;
+            color: #6A1B9A;
+            margin: 30px 0 20px;
+            font-weight: 600;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0e6ff;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #f0e6ff;
+        }
+
+        .save-btn {
+            flex: 1;
+            background: linear-gradient(135deg, #6A1B9A, #8E24AA);
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .save-btn:hover {
+            background: linear-gradient(135deg, #50157a, #6A1B9A);
+            transform: translateY(-1px);
+        }
+
+        .save-btn:active {
+            transform: scale(0.98);
+        }
+
+        .cancel-btn {
+            flex: 1;
+            background-color: #f8f4ff;
+            border: 1px solid #f0e6ff;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #6A1B9A;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cancel-btn:hover {
+            background-color: #f0e6ff;
+        }
+
+        .edit-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .edit-mode {
+            background-color: #f0e6ff;
+            color: #6A1B9A;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .edit-btn {
+            background: none;
+            border: 1px solid #6A1B9A;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            color: #6A1B9A;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn:hover {
+            background-color: #6A1B9A;
+            color: white;
+        }
+
+        .readonly-info {
+            background-color: #f8f4ff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #f0e6ff;
+            font-size: 14px;
+            color: #6A1B9A;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .info-label {
+            font-weight: 500;
+            color: #8e8e98;
+        }
+
+        .info-value {
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <!-- 页面头部 -->
+        <div class="profile-header">
+            <h1><i class="fas fa-user-cog"></i> 个人信息管理</h1>
+            <a href="part.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                返回
+            </a>
+        </div>
+
+        <div class="profile-content">
+            <!-- 头像区域 -->
+            <div class="avatar-section">
+                <div class="avatar-upload">
+                    <img id="avatarPreview" class="avatar-preview" src="" alt="用户头像">
+                    <div class="avatar-upload-btn" onclick="document.getElementById('avatarInput').click()">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                </div>
+                <div class="avatar-hint">点击头像可上传新照片</div>
+                <div class="readonly-info" style="margin-top: 20px;">
+                    <div class="info-item">
+                        <span class="info-label">用户ID:</span>
+                        <span id="userId" class="info-value"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">注册时间:</span>
+                        <span id="registerTime" class="info-value"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">登录方式:</span>
+                        <span id="loginMethod" class="info-value"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 信息编辑区域 -->
+            <div class="info-section">
+                <div class="edit-toggle">
+                    <span class="edit-mode" id="editMode">查看模式</span>
+                    <button class="edit-btn" onclick="toggleEditMode()" id="editToggleBtn">
+                        <i class="fas fa-edit"></i> 编辑信息
+                    </button>
+                </div>
+
+                <!-- 基本信息 -->
+                <h3 class="section-title">基本信息</h3>
+                
+                <div class="form-group">
+                    <label for="nickname">昵称</label>
+                    <input type="text" id="nickname" class="form-input" placeholder="请输入昵称" disabled>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">手机号码</label>
+                    <input type="tel" id="phone" class="form-input" placeholder="请输入手机号码" disabled>
+                    <div class="form-hint">手机号码用于登录和接收验证码</div>
+                </div>
+
+                <!-- 学校信息 -->
+                <h3 class="section-title">学校信息</h3>
+                
+                <div class="form-group">
+                    <label for="province">所在省份</label>
+                    <select id="province" class="form-select" disabled>
+                        <option value="">请选择省份</option>
+                        <option value="beijing">北京市</option>
+                        <option value="shanghai">上海市</option>
+                        <option value="guangdong">广东省</option>
+                        <option value="jiangsu">江苏省</option>
+                        <option value="zhejiang">浙江省</option>
+                        <option value="shandong">山东省</option>
+                        <option value="hubei">湖北省</option>
+                        <option value="sichuan">四川省</option>
+                        <option value="hunan">湖南省</option>
+                        <option value="henan">河南省</option>
+                        <option value="hebei">河北省</option>
+                        <option value="liaoning">辽宁省</option>
+                        <option value="fujian">福建省</option>
+                        <option value="anhui">安徽省</option>
+                        <option value="other">其他省份</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="schoolType">学校类型</label>
+                    <select id="schoolType" class="form-select" disabled>
+                        <option value="">请选择学校类型</option>
+                        <option value="university">大学/学院</option>
+                        <option value="college">专科院校</option>
+                        <option value="vocational">职业院校</option>
+                        <option value="highschool">高中</option>
+                        <option value="middleschool">初中</option>
+                        <option value="primary">小学</option>
+                        <option value="other">其他</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="schoolName">学校名称</label>
+                    <input type="text" id="schoolName" class="form-input" placeholder="请输入学校名称" disabled>
+                </div>
+
+                <div class="form-group">
+                    <label for="studentId">学号/工号</label>
+                    <input type="text" id="studentId" class="form-input" placeholder="请输入学号或工号" disabled>
+                </div>
+
+                <div class="form-group">
+                    <label for="department">院系/专业</label>
+                    <input type="text" id="department" class="form-input" placeholder="请输入院系或专业名称" disabled>
+                </div>
+
+                <!-- 操作按钮 -->
+                <div class="action-buttons" id="actionButtons" style="display: none;">
+                    <button type="button" class="cancel-btn" onclick="cancelEdit()">
+                        <i class="fas fa-times"></i> 取消
+                    </button>
+                    <button type="button" class="save-btn" onclick="saveProfile()">
+                        <i class="fas fa-save"></i> 保存修改
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isEditing = false;
+        let originalData = {};
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+            loadUserProfile();
+            setupAvatarUpload();
+        });
+
+        // 检查登录状态
+        function checkLoginStatus() {
+            const currentUser = localStorage.getItem('current_user');
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+        }
+
+        // 加载用户信息
+        function loadUserProfile() {
+            const userData = JSON.parse(localStorage.getItem('current_user') || '{}');
+            const loginType = localStorage.getItem('login_type') || 'unknown';
+            const schoolInfo = JSON.parse(localStorage.getItem('school_info') || '{}');
+
+            // 设置头像
+            if (userData.avatar) {
+                document.getElementById('avatarPreview').src = userData.avatar;
+            }
+
+            // 设置基本信息
+            document.getElementById('nickname').value = userData.nickname || '';
+            document.getElementById('phone').value = userData.phone || '';
+
+            // 设置学校信息
+            document.getElementById('province').value = schoolInfo.province || '';
+            document.getElementById('schoolType').value = schoolInfo.schoolType || '';
+            document.getElementById('schoolName').value = schoolInfo.schoolName || '';
+            document.getElementById('studentId').value = schoolInfo.studentId || '';
+            document.getElementById('department').value = schoolInfo.department || '';
+
+            // 设置只读信息
+            document.getElementById('userId').textContent = userData.openid || userData.phone || '未知';
+            document.getElementById('registerTime').textContent = formatDate(userData.registeredAt);
+            document.getElementById('loginMethod').textContent = loginType === 'wechat' ? '微信登录' : '手机登录';
+
+            // 保存原始数据
+            originalData = {
+                nickname: userData.nickname || '',
+                phone: userData.phone || '',
+                province: schoolInfo.province || '',
+                schoolType: schoolInfo.schoolType || '',
+                schoolName: schoolInfo.schoolName || '',
+                studentId: schoolInfo.studentId || '',
+                department: schoolInfo.department || ''
+            };
+        }
+
+        // 设置头像上传
+        function setupAvatarUpload() {
+            const avatarInput = document.getElementById('avatarInput');
+            avatarInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    if (file.size > 2 * 1024 * 1024) { // 2MB限制
+                        showMessage('图片大小不能超过2MB', 'error');
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('avatarPreview').src = e.target.result;
+                        
+                        // 保存到本地存储
+                        const userData = JSON.parse(localStorage.getItem('current_user') || '{}');
+                        userData.avatar = e.target.result;
+                        localStorage.setItem('current_user', JSON.stringify(userData));
+                        
+                        showMessage('头像更新成功', 'success');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // 切换编辑模式
+        function toggleEditMode() {
+            isEditing = !isEditing;
+            const inputs = document.querySelectorAll('.form-input, .form-select');
+            const actionButtons = document.getElementById('actionButtons');
+            const editMode = document.getElementById('editMode');
+            const editToggleBtn = document.getElementById('editToggleBtn');
+
+            if (isEditing) {
+                // 进入编辑模式
+                inputs.forEach(input => {
+                    input.disabled = false;
+                });
+                actionButtons.style.display = 'flex';
+                editMode.textContent = '编辑模式';
+                editMode.style.backgroundColor = '#6A1B9A';
+                editMode.style.color = 'white';
+                editToggleBtn.innerHTML = '<i class="fas fa-eye"></i> 查看模式';
+            } else {
+                // 退出编辑模式
+                inputs.forEach(input => {
+                    input.disabled = true;
+                });
+                actionButtons.style.display = 'none';
+                editMode.textContent = '查看模式';
+                editMode.style.backgroundColor = '#f0e6ff';
+                editMode.style.color = '#6A1B9A';
+                editToggleBtn.innerHTML = '<i class="fas fa-edit"></i> 编辑信息';
+                
+                // 恢复原始数据
+                cancelEdit();
+            }
+        }
+
+        // 取消编辑
+        function cancelEdit() {
+            document.getElementById('nickname').value = originalData.nickname;
+            document.getElementById('phone').value = originalData.phone;
+            document.getElementById('province').value = originalData.province;
+            document.getElementById('schoolType').value = originalData.schoolType;
+            document.getElementById('schoolName').value = originalData.schoolName;
+            document.getElementById('studentId').value = originalData.studentId;
+            document.getElementById('department').value = originalData.department;
+
+            if (isEditing) {
+                toggleEditMode();
+            }
+        }
+
+        // 保存个人信息
+        function saveProfile() {
+            const nickname = document.getElementById('nickname').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const province = document.getElementById('province').value;
+            const schoolType = document.getElementById('schoolType').value;
+            const schoolName = document.getElementById('schoolName').value.trim();
+            const studentId = document.getElementById('studentId').value.trim();
+            const department = document.getElementById('department').value.trim();
+
+            // 验证必填字段
+            if (!nickname) {
+                showMessage('请输入昵称', 'error');
+                return;
+            }
+
+            if (!schoolName) {
+                showMessage('请输入学校名称', 'error');
+                return;
+            }
+
+            // 验证手机号格式（如果修改了手机号）
+            if (phone && phone !== originalData.phone) {
+                const phoneRegex = /^1[3-9]\d{9}$/;
+                if (!phoneRegex.test(phone)) {
+                    showMessage('请输入正确的手机号码', 'error');
+                    return;
+                }
+            }
+
+            // 更新用户信息
+            const userData = JSON.parse(localStorage.getItem('current_user') || '{}');
+            userData.nickname = nickname;
+            if (phone && phone !== originalData.phone) {
+                userData.phone = phone;
+            }
+            localStorage.setItem('current_user', JSON.stringify(userData));
+
+            // 更新学校信息
+            const schoolInfo = {
+                province: province,
+                schoolType: schoolType,
+                schoolName: schoolName,
+                studentId: studentId,
+                department: department,
+                filledAt: new Date().toISOString()
+            };
+            localStorage.setItem('school_info', JSON.stringify(schoolInfo));
+
+            // 更新原始数据
+            originalData = {
+                nickname: nickname,
+                phone: phone,
+                province: province,
+                schoolType: schoolType,
+                schoolName: schoolName,
+                studentId: studentId,
+                department: department
+            };
+
+            showMessage('个人信息保存成功', 'success');
+            
+            // 退出编辑模式
+            setTimeout(() => {
+                toggleEditMode();
+            }, 1000);
+        }
+
+        // 格式化日期
+        function formatDate(dateString) {
+            if (!dateString) return '未知';
+            
+            const date = new Date(dateString);
+            return date.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
+        }
+
+        // 显示消息
+        function showMessage(message, type = 'info') {
+            // 移除现有的消息
+            const existingMsg = document.querySelector('.message-toast');
+            if (existingMsg) {
+                existingMsg.remove();
+            }
+
+            const toast = document.createElement('div');
+            toast.className = `message-toast message-${type}`;
+            
+            // 根据类型添加图标
+            const icon = getMessageIcon(type);
+            toast.innerHTML = `${icon}<span>${message}</span>`;
+            
+            document.body.appendChild(toast);
+            
+            // 3秒后自动消失
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.remove();
+                }
+            }, 3000);
+        }
+
+        // 获取消息图标
+        function getMessageIcon(type) {
+            const icons = {
+                success: '<i class="fas fa-check-circle"></i>',
+                error: '<i class="fas fa-exclamation-triangle"></i>',
+                warning: '<i class="fas fa-exclamation-circle"></i>',
+                info: '<i class="fas fa-info-circle"></i>'
+            };
+            return icons[type] || icons.info;
+        }
+    </script>
+</body>
+</html>

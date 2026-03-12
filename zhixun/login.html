@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录·注册 | 简化版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: url('https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-4.0.3&auto=format&fit=crop&w=2022&q=80') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+        }
+
+        /* 遮罩层，让白色卡片更突出 */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(4px);
+        }
+
+        .card {
+            position: relative;
+            width: 420px;
+            background: #ffffff; /* 白色背景 */
+            border-radius: 20px;
+            padding: 40px 35px;
+            box-shadow: 0 15px 35px rgba(106, 13, 173, 0.15); /* 紫色阴影 */
+            text-align: center;
+            z-index: 1;
+            border: 1px solid rgba(106, 13, 173, 0.1); /* 极淡紫边框 */
+        }
+
+        /* 紫色元素 */
+        h2 {
+            color: #6a0dad; /* 紫色标题 */
+            font-weight: 600;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.9rem;
+            color: #4a4a4a; /* 深灰色文字 */
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #dcdcdc;
+            border-radius: 30px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: #9b4dff; /* 紫色边框聚焦 */
+            box-shadow: 0 0 0 3px rgba(155, 77, 255, 0.1);
+        }
+
+        /* 两个按钮并排 */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 0;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-primary {
+            background: #6a0dad; /* 紫色 */
+            color: white;
+            box-shadow: 0 4px 15px rgba(106, 13, 173, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #7b2eda; /* 稍亮紫 */
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(106, 13, 173, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #6a0dad; /* 紫色文字 */
+            border: 2px solid #6a0dad;
+        }
+
+        .btn-secondary:hover {
+            background: #f5f0ff; /* 极浅紫背景 */
+            transform: translateY(-2px);
+        }
+
+        /* 可选协议提示 */
+        .note {
+            margin-top: 25px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .note a {
+            color: #6a0dad;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        hr {
+            margin: 20px 0;
+            border: none;
+            border-top: 1px solid #eee;
+        }
+        /* 响应式调整 */
+@media (max-width: 480px) {
+    .card {
+        width: 90%;
+        padding: 30px 25px;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    .input-group input {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .btn {
+        padding: 10px 0;
+        font-size: 0.9rem;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div>
+        <img src="zhiuxnlogo.png" style="width: 100px; margin-bottom: 20px;">
+        <!-- <div style="margin-bottom: 20px;">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#6a0dad" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M2 17L12 22L22 17" stroke="#6a0dad" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M2 12L12 17L22 12" stroke="#6a0dad" stroke-width="2" stroke-linejoin="round"/>
+            </svg> -->
+        </div>
+        <h2>欢迎来到智寻</h2>
+        <h3 style="font-size: 0.8rem; color: #882a63; padding-bottom : 40px;">找寻您丢失物品的平台</h3>
+        <div id="error-message" style="background-color: #ffebee; color: #c62828; padding: 10px; border-radius: 5px; margin-bottom: 20px; display: none;"></div>
+        
+        <!-- 注册表单 -->
+        <div id="register-form" style="display: block;">
+            <form id="authForm" method="POST">
+                <div class="input-group">
+                    <label>昵称</label>
+                    <input type="text" name="nickname" id="nickname" placeholder="请输入昵称">
+                </div>
+                <div class="input-group">
+                    <label>邮箱 / 手机号</label>
+                    <input type="text" name="contact" id="contact" placeholder="请输入邮箱或手机号">
+                </div>
+                <div class="input-group">
+                    <label>密码</label>
+                    <input type="password" name="password" id="password" placeholder="请输入密码">
+                </div>
+                <!-- 仅两个按钮 -->
+                <div class="action-buttons">
+                    <button type="button" id="registerBtn" class="btn btn-primary">立即注册</button>
+                    <button type="button" id="loginBtn" class="btn btn-secondary">已有账号登录</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- 登录表单 -->
+        <div id="login-form" style="display: none;">
+            <form id="loginAuthForm" method="POST" action="login.php">
+                <div class="input-group">
+                    <label>邮箱 / 手机号</label>
+                    <input type="text" name="contact" id="login-contact" placeholder="请输入邮箱或手机号">
+                </div>
+                <div class="input-group">
+                    <label>密码</label>
+                    <input type="password" name="password" id="login-password" placeholder="请输入密码">
+                </div>
+                <!-- 登录按钮 -->
+                <div class="action-buttons">
+                    <button type="button" id="backToRegisterBtn" class="btn btn-secondary">返回注册</button>
+                    <button type="submit" class="btn btn-primary">登录</button>
+                </div>
+            </form>
+        </div>
+        <hr>
+        <p class="note">
+            注册即表示同意 <a href="#">用户协议</a> 和 <a href="#">隐私政策</a>
+        </p>
+    </div>
+
+    <script>
+            // 获取表单元素
+            const form = document.getElementById('authForm');
+            const loginForm = document.getElementById('loginAuthForm');
+            const registerFormDiv = document.getElementById('register-form');
+            const loginFormDiv = document.getElementById('login-form');
+
+// 检查URL参数中的错误信息
+function checkError() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get('error');
+    if (error === 'registered') {
+        const errorMessage = document.getElementById('error-message');
+        errorMessage.textContent = '该邮箱/手机号已被注册，请直接登录';
+        errorMessage.style.display = 'block';
+        // 自动切换到登录表单
+        switchToLoginForm();
+    }
+}
+
+// 页面加载时检查错误信息
+window.onload = checkError;
+
+// 切换到登录表单
+function switchToLoginForm() {
+    registerFormDiv.style.display = 'none';
+    loginFormDiv.style.display = 'block';
+}
+
+// 切换到注册表单
+function switchToRegisterForm() {
+    loginFormDiv.style.display = 'none';
+    registerFormDiv.style.display = 'block';
+}
+
+// 注册按钮：点击后修改表单action为register.php并提交
+document.getElementById('registerBtn').addEventListener('click', function(e) {
+    e.preventDefault();          // 阻止默认行为（按钮本身无默认行为，但防止事件冒泡）
+    form.action = 'register.php';
+    form.submit();
+});
+
+// 登录按钮：点击后切换到登录表单
+document.getElementById('loginBtn').addEventListener('click', function(e) {
+    e.preventDefault();
+    switchToLoginForm();
+});
+
+// 返回注册按钮：点击后切换到注册表单
+document.getElementById('backToRegisterBtn').addEventListener('click', function(e) {
+    e.preventDefault();
+    switchToRegisterForm();
+});
+
+// 注册表单验证
+form.addEventListener('submit', function(e) {
+    const nickname = document.getElementById('nickname').value.trim();
+    const contact = document.getElementById('contact').value.trim();
+    const password = document.getElementById('password').value;
+    
+    if (form.action.includes('register.php')) {
+        // 注册时的验证
+        if (!nickname || !contact || !password) {
+            e.preventDefault();
+            alert('所有字段都必须填写');
+            return false;
+        }
+        if (password.length < 6) {
+            e.preventDefault();
+            alert('密码长度至少6位');
+            return false;
+        }
+    }
+});
+
+// 登录表单验证
+loginForm.addEventListener('submit', function(e) {
+    const contact = document.getElementById('login-contact').value.trim();
+    const password = document.getElementById('login-password').value;
+    
+    // 登录时的验证
+    if (!contact || !password) {
+        e.preventDefault();
+        alert('邮箱/手机号和密码不能为空');
+        return false;
+    }
+});
+    </script>
+</body>
+</html>

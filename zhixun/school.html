@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>智寻 - 学校信息填写</title>
+    <style>
+        /* 学校信息填写页面特定样式 */
+        .school-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .school-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .school-header h1 {
+            font-size: 28px;
+            color: #6A1B9A;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .school-header p {
+            color: #8e8e98;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .school-form {
+            background-color: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(106, 27, 154, 0.05);
+            border: 1px solid #f0e6ff;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #6A1B9A;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #f0e6ff;
+            border-radius: 12px;
+            font-size: 16px;
+            background-color: #f8f4ff;
+            color: #1f1f1f;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236A1B9A' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 16px;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #6A1B9A;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(106, 27, 154, 0.08);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #f0e6ff;
+            border-radius: 12px;
+            font-size: 16px;
+            background-color: #f8f4ff;
+            color: #1f1f1f;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #6A1B9A;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(106, 27, 154, 0.08);
+        }
+
+        .form-input::placeholder {
+            color: #bebecb;
+        }
+
+        .form-hint {
+            font-size: 12px;
+            color: #8e8e98;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #6A1B9A, #8E24AA);
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 17px;
+            font-weight: 590;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #50157a, #6A1B9A);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 16px rgba(106, 27, 154, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        .submit-btn:disabled {
+            background: #bebecb;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .skip-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .skip-btn {
+            background: none;
+            border: none;
+            color: #6A1B9A;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: underline;
+            padding: 5px;
+        }
+
+        .skip-btn:hover {
+            color: #50157a;
+        }
+
+        .progress-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .progress-step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 500;
+            background-color: #f0e6ff;
+            color: #8e8e98;
+        }
+
+        .progress-step.active {
+            background: linear-gradient(135deg, #6A1B9A, #8E24AA);
+            color: white;
+        }
+
+        .progress-line {
+            flex: 1;
+            height: 2px;
+            background-color: #f0e6ff;
+            max-width: 40px;
+        }
+
+        .school-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #6A1B9A, #8E24AA);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 32px;
+        }
+
+        .optional-badge {
+            background-color: #f0e6ff;
+            color: #6A1B9A;
+            padding: 2px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="school-container">
+        <!-- 进度条 -->
+        <div class="progress-bar">
+            <div class="progress-step active">1</div>
+            <div class="progress-line"></div>
+            <div class="progress-step">2</div>
+        </div>
+
+        <!-- 页面头部 -->
+        <div class="school-header">
+            <div class="school-logo">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h1>完善学校信息</h1>
+            <p>请填写您的学校信息，这将帮助我们更好地为您提供服务</p>
+        </div>
+
+        <!-- 学校信息表单 -->
+        <div class="school-form">
+            <form id="schoolForm">
+                <div class="form-group">
+                    <label for="province">
+                        所在省份
+                        <span class="optional-badge">可选</span>
+                    </label>
+                    <select id="province" class="form-select">
+                        <option value="">请选择省份</option>
+                        <option value="beijing">北京市</option>
+                        <option value="shanghai">上海市</option>
+                        <option value="guangdong">广东省</option>
+                        <option value="jiangsu">江苏省</option>
+                        <option value="zhejiang">浙江省</option>
+                        <option value="shandong">山东省</option>
+                        <option value="hubei">湖北省</option>
+                        <option value="sichuan">四川省</option>
+                        <option value="hunan">湖南省</option>
+                        <option value="henan">河南省</option>
+                        <option value="hebei">河北省</option>
+                        <option value="liaoning">辽宁省</option>
+                        <option value="fujian">福建省</option>
+                        <option value="anhui">安徽省</option>
+                        <option value="other">其他省份</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="schoolType">
+                        学校类型
+                        <span class="optional-badge">可选</span>
+                    </label>
+                    <select id="schoolType" class="form-select">
+                        <option value="">请选择学校类型</option>
+                        <option value="university">大学/学院</option>
+                        <option value="college">专科院校</option>
+                        <option value="vocational">职业院校</option>
+                        <option value="highschool">高中</option>
+                        <option value="middleschool">初中</option>
+                        <option value="primary">小学</option>
+                        <option value="other">其他</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="schoolName">学校名称</label>
+                    <input type="text" id="schoolName" class="form-input" placeholder="请输入您的学校名称">
+                    <div class="form-hint">请输入完整的学校名称，这将帮助我们进行精准匹配</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="studentId">
+                        学号/工号
+                        <span class="optional-badge">可选</span>
+                    </label>
+                    <input type="text" id="studentId" class="form-input" placeholder="请输入学号或工号">
+                    <div class="form-hint">填写学号或工号有助于身份验证和物品匹配</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="department">
+                        院系/专业
+                        <span class="optional-badge">可选</span>
+                    </label>
+                    <input type="text" id="department" class="form-input" placeholder="请输入院系或专业名称">
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <i class="fas fa-check"></i> 确认并继续
+                </button>
+            </form>
+
+            <div class="skip-link">
+                <button class="skip-btn" onclick="skipSchoolInfo()">
+                    <i class="fas fa-forward"></i> 跳过，稍后填写
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 页面加载时检查登录状态
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+            loadUserInfo();
+            setupFormValidation();
+        });
+
+        // 检查登录状态
+        function checkLoginStatus() {
+            const currentUser = localStorage.getItem('current_user');
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 检查是否已经填写过学校信息
+            const schoolInfo = localStorage.getItem('school_info');
+            if (schoolInfo) {
+                // 如果已经填写过，直接跳转到选择界面
+                window.location.href = 'part.html';
+                return;
+            }
+        }
+
+        // 加载用户信息
+        function loadUserInfo() {
+            const userData = JSON.parse(localStorage.getItem('current_user') || '{}');
+            
+            // 可以根据用户信息预填一些字段
+            // 例如：如果是微信用户，可以尝试从昵称中提取信息
+            if (userData.nickname) {
+                // 简单的昵称分析（示例）
+                const nickname = userData.nickname.toLowerCase();
+                
+                // 尝试识别学校关键词
+                const schoolKeywords = ['大学', '学院', '学校', '中学', '小学'];
+                for (let keyword of schoolKeywords) {
+                    if (nickname.includes(keyword)) {
+                        document.getElementById('schoolName').value = userData.nickname;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // 设置表单验证
+        function setupFormValidation() {
+            const form = document.getElementById('schoolForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const schoolNameInput = document.getElementById('schoolName');
+
+            // 实时验证学校名称
+            schoolNameInput.addEventListener('input', function() {
+                validateForm();
+            });
+
+            // 表单提交
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitSchoolInfo();
+            });
+
+            // 初始验证
+            validateForm();
+        }
+
+        // 验证表单
+        function validateForm() {
+            const submitBtn = document.getElementById('submitBtn');
+            const schoolName = document.getElementById('schoolName').value.trim();
+
+            // 学校名称是必填项
+            if (schoolName.length === 0) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-check"></i> 请填写学校名称';
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-check"></i> 确认并继续';
+            }
+        }
+
+        // 提交学校信息
+        function submitSchoolInfo() {
+            const schoolInfo = {
+                province: document.getElementById('province').value,
+                schoolType: document.getElementById('schoolType').value,
+                schoolName: document.getElementById('schoolName').value.trim(),
+                studentId: document.getElementById('studentId').value.trim(),
+                department: document.getElementById('department').value.trim(),
+                filledAt: new Date().toISOString()
+            };
+
+            // 验证必填字段
+            if (!schoolInfo.schoolName) {
+                showMessage('请输入学校名称', 'error');
+                return;
+            }
+
+            // 保存学校信息
+            localStorage.setItem('school_info', JSON.stringify(schoolInfo));
+            
+            // 更新用户信息
+            const userData = JSON.parse(localStorage.getItem('current_user') || '{}');
+            userData.schoolInfo = schoolInfo;
+            localStorage.setItem('current_user', JSON.stringify(userData));
+
+            showMessage('学校信息保存成功！', 'success');
+
+            // 跳转到选择界面
+            setTimeout(() => {
+                window.location.href = 'part.html';
+            }, 1500);
+        }
+
+        // 跳过学校信息填写
+        function skipSchoolInfo() {
+            if (confirm('确定要跳过学校信息填写吗？您可以在个人设置中稍后补充。')) {
+                // 设置跳过标志
+                localStorage.setItem('school_info_skipped', 'true');
+                
+                showMessage('已跳过学校信息填写', 'info');
+                
+                // 跳转到选择界面
+                setTimeout(() => {
+                    window.location.href = 'part.html';
+                }, 1000);
+            }
+        }
+
+        // 显示消息
+        function showMessage(message, type = 'info') {
+            // 移除现有的消息
+            const existingMsg = document.querySelector('.message-toast');
+            if (existingMsg) {
+                existingMsg.remove();
+            }
+
+            const toast = document.createElement('div');
+            toast.className = `message-toast message-${type}`;
+            
+            // 根据类型添加图标
+            const icon = getMessageIcon(type);
+            toast.innerHTML = `${icon}<span>${message}</span>`;
+            
+            document.body.appendChild(toast);
+            
+            // 3秒后自动消失
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.remove();
+                }
+            }, 3000);
+        }
+
+        // 获取消息图标
+        function getMessageIcon(type) {
+            const icons = {
+                success: '<i class="fas fa-check-circle"></i>',
+                error: '<i class="fas fa-exclamation-triangle"></i>',
+                warning: '<i class="fas fa-exclamation-circle"></i>',
+                info: '<i class="fas fa-info-circle"></i>'
+            };
+            return icons[type] || icons.info;
+        }
+
+        // 回车键支持
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const submitBtn = document.getElementById('submitBtn');
+                if (!submitBtn.disabled) {
+                    submitSchoolInfo();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
